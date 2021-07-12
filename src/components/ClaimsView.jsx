@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ClaimsTable from './ClaimsTable';
 import Filters from './Filters';
+import Search from './Search';
 
 /*
 ISSUES:
@@ -12,6 +13,7 @@ ISSUES:
 const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteClaim}) => {
 
   const [filtredClaims, setFiltredClaims] = useState(claims);
+  const [queryString, setQueryString] = useState('');
 
   useEffect(
     () => {
@@ -20,19 +22,27 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
     [claims]
   )
 
+  // Время будет, так сделать ещё мультифильтр по фирмам и перевозчикам.
   const handleGetFilters = (targetDate) => {
     targetDate === "all" ? setFiltredClaims(claims) : setFiltredClaims(
       claims.slice().filter(claim => claim.datetime.slice(0, -7) === targetDate)
     );
-  }
+  };
+
+  // Поиск допилить по ATI и телефону ещё. По радиобаттону.
+  const foundClaims = filtredClaims
+    .slice()
+    .filter(claim => claim.comments.toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1);
+
 
   return (
     <>
       <section>
-        <h3>Фильтры</h3>
+        <h3>Фильтры и поиск</h3>
         <Filters claims={claims} onGetFilters={handleGetFilters} />
+        <Search queryString={queryString} setQueryString={setQueryString} />
       </section>
-      <ClaimsTable claims={filtredClaims} handleSelectClaim={handleSelectClaim} handleDeleteClaim={handleDeleteClaim} />
+      <ClaimsTable claims={foundClaims} handleSelectClaim={handleSelectClaim} handleDeleteClaim={handleDeleteClaim} />
     </>
   )
 }
