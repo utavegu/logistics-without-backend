@@ -12,7 +12,7 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
 
   useEffect(
     () => {
-      setTargetClaim(currentClaim)
+      setTargetClaim(currentClaim);
     },
     [editing, currentClaim]
   )
