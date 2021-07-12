@@ -16,8 +16,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  background-color: lightgray; /*ВРЕМЕННО*/
 }
 
 a {
@@ -72,6 +70,4 @@ img {
 .container {
   width: 1200px;
   margin: 0 auto;
-
-  background-color: lightskyblue; /*ВРЕМЕННО*/
 }

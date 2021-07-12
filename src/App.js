@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import AddClaimForm from './components/AddClaimForm';
-import ClaimsView from './components/ClaimsView';
 import ClaimModel from './models/ClaimModel';
+import AddClaimForm from './components/AddClaimForm';
+import EditClaimForm from './components/EditClaimForm';
+import ClaimsView from './components/ClaimsView';
+
 
 /*
 ISSUES
@@ -31,7 +33,6 @@ const initialFormState = {
 const App = () => {
 
   const [claims, setClaims] = useState(claimsMocks);
-  // Заготовки для формы редактирования
   const [editing, setEditing] = useState(false);
   const [currentClaim, setCurrentClaim] = useState(initialFormState);
 
@@ -59,7 +60,10 @@ const App = () => {
     });
   };
 
-
+  const handleUpdateClaim = (id, updatedClaim) => {
+    setEditing(false)
+    setClaims(claims.map(claim => (claim.appNumber === id ? updatedClaim : claim)))
+  }
 
 
   return (
@@ -72,10 +76,22 @@ const App = () => {
       </section>
 
       <div className="form-place">
-        <section>
-          <h2>Создать новую заявку</h2>
-          <AddClaimForm onAdd={handleAddClaim} />
-        </section>
+        {editing ? (
+          <section>
+            <h2>Редактировать пользователя</h2>
+            <EditClaimForm
+              editing={editing}
+              setEditing={setEditing}
+              currentClaim={currentClaim}
+              onUpdate={handleUpdateClaim}
+            />
+          </section>
+        ) : (
+          <section>
+            <h2>Создать новую заявку</h2>
+            <AddClaimForm onAdd={handleAddClaim} />
+          </section>
+        )}
       </div>
 
     </main>
