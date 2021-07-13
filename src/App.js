@@ -6,10 +6,11 @@ import ClaimsView from './components/ClaimsView';
 
 /*
 ISSUES
-  - Ссылки в константы. Или даже только их общую часть, а там конкатенацией или шаблонной строкой прилепишь
   - Обработку ошибок и загрузки для взаимодействия с сервером
   - Моки на сервер и генерацию айдишника туда же
   - На сервере имена эндпоинтов тоже поменять... юзерс блин
+
+  - DRY!
   
   - Секшинам классы
 */
@@ -27,6 +28,8 @@ const claimsMocks = [
 ];
 */
 
+const SERVER_LINK = "http://localhost:4000/api/"
+
 const initialFormState = {
   appNumber: null,
   datetime: "",
@@ -39,13 +42,13 @@ const initialFormState = {
 
 const App = () => {
 
-  const [claims, setClaims] = useState([]);
+  const [claims, setClaims] = useState(null);
   // const [claims, setClaims] = useState(claimsMocks); --- для версии без бэка
   const [editing, setEditing] = useState(false);
   const [currentClaim, setCurrentClaim] = useState(initialFormState);
 
   const loadActualClaims = () => {
-		fetch("http://localhost:4000/api/users")
+		fetch(SERVER_LINK + "users")
 			.then(response => response.json())
 			.then(claims => {
 				setClaims(claims.data);
@@ -74,7 +77,7 @@ const App = () => {
       ati: claim.phone,
     };
 
-    fetch("http://localhost:4000/api/user", {
+    fetch(SERVER_LINK + "user", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -88,7 +91,7 @@ const App = () => {
     // setClaims(claims.filter(claim => claim.appNumber !== id)); --- для версии без бэка
   
     // БЭК (пока без лоадинга и обработки ошибок):
-    fetch(`http://localhost:4000/api/user/${id}`, {
+    fetch(SERVER_LINK + `user/${id}`, {
       method: 'DELETE'
     })
 
@@ -123,7 +126,7 @@ const App = () => {
       ati: updatedClaim.phone,
     };
 
-    fetch(`http://localhost:4000/api/user/${id}`, {
+    fetch(SERVER_LINK + `user/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -139,7 +142,11 @@ const App = () => {
 
       <section>
         <h2>Таблица заявок</h2>
-        <ClaimsView claims={claims} onEdit={handleSelectClaim} onDelete={handleDeleteClaim} />
+        {claims ? 
+          <ClaimsView claims={claims} onEdit={handleSelectClaim} onDelete={handleDeleteClaim} /> 
+        : 
+          <p>Загрузка...</p>
+        }
       </section>
 
       <div className="form-place">
