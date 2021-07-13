@@ -10,9 +10,10 @@ ISSUES
   2) Обработку ошибок и загрузки для взаимодействия с сервером
   3) Моки на сервер и генерацию айдишника туда же
   4) Ссылки в константы. Или даже только их общую часть, а там конкатенацией или шаблонной строкой прилепишь
+  5) На сервере имена эндпоинтов тоже поменять... юзерс блин
 */
 
-let i = 1;
+// let i = 1; --- для версии без бэка
 
 /*
 const claimsMocks = [
@@ -37,32 +38,31 @@ const initialFormState = {
 const App = () => {
 
   const [claims, setClaims] = useState([]);
-  // const [claims, setClaims] = useState(claimsMocks);
+  // const [claims, setClaims] = useState(claimsMocks); --- для версии без бэка
   const [editing, setEditing] = useState(false);
   const [currentClaim, setCurrentClaim] = useState(initialFormState);
 
-  const loadActualNotes = () => {
+  const loadActualClaims = () => {
 		fetch("http://localhost:4000/api/users")
 			.then(response => response.json())
-			.then(memoes => {
-        console.log(memoes);
-				setClaims(memoes.data);
+			.then(claims => {
+				setClaims(claims.data);
 			})
 	};
 
   useEffect(() => {
-    loadActualNotes();
+    loadActualClaims();
   }, [])
   
 
   const handleAddClaim = claim => {
-    claim.appNumber = i++;
+    // claim.appNumber = i++;
     claim.datetime = new Date().toLocaleString().slice(0, -3);
-    setClaims([...claims, claim]);
+    // setClaims([...claims, claim]); --- для версии без бэка
 
     // БЭК (пока без лоадинга и обработки ошибок):
     const body = {
-      appNumber: claim.appNumber, // пока так, в идеале на сервере аналогичным образом
+      // appNumber: claim.appNumber, // пока так, в идеале на сервере аналогичным образом
       datetime: claim.datetime,
       firmName: claim.firmName,
       fullname: claim.fullname,
@@ -76,11 +76,20 @@ const App = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
+
+    loadActualClaims();
   };
 
   const handleDeleteClaim = id => {
     setEditing(false);
-    setClaims(claims.filter(claim => claim.appNumber !== id));
+    // setClaims(claims.filter(claim => claim.appNumber !== id)); --- для версии без бэка
+  
+    // БЭК (пока без лоадинга и обработки ошибок):
+    fetch(`http://localhost:4000/api/user/${id}`, {
+      method: 'DELETE'
+    })
+
+    loadActualClaims();
   };
 
   const handleSelectClaim = claim => {
@@ -98,7 +107,8 @@ const App = () => {
 
   const handleUpdateClaim = (id, updatedClaim) => {
     setEditing(false)
-    setClaims(claims.map(claim => (claim.appNumber === id ? updatedClaim : claim)))
+    // setClaims(claims.map(claim => (claim.appNumber === id ? updatedClaim : claim))) --- для версии без бэка
+    console.log(updatedClaim);
   }
 
 
