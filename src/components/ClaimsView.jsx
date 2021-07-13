@@ -29,7 +29,7 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
     );
   };
 
-  // Поиск допилить по ATI и телефону ещё. По радиобаттону.
+  // Поиск допилить по ATI и телефону ещё. По радиобаттону. Или можно через двойное или искать по другим двум поляем ещё. А потом отдавать уникальный массив, без повторений. Хотя с такими полями какие уж там повторения...
   const foundClaims = filtredClaims
     .slice()
     .filter(claim => claim.comments.toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1);
