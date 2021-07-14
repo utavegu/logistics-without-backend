@@ -10,8 +10,6 @@ ISSUES
   - Текст ошибки?
   - Функцию запроса на сервер, прелоадер и статусное сообщение - в утил
 
-  - Еррор с сервера вместе с данными, заголовки в гет и делит...
-
   - Обработку ошибок и загрузки для взаимодействия с сервером +-
   - Моки на сервер и генерацию айдишника туда же
   - На сервере имена эндпоинтов тоже поменять... юзерс блин
@@ -92,7 +90,7 @@ const App = () => {
 
   // GET
   const loadActualClaims = () => {
-    createRequest(SERVER_LINK + "users", "GET");
+    createRequest(SERVER_LINK + "claims", "GET");
 	};
 
   useEffect(() => {
@@ -108,9 +106,9 @@ const App = () => {
       fullname: claim.fullname,
       phone: claim.phone,
       comments: claim.comments,
-      ati: claim.phone,
+      ati: claim.ati,
     };
-    createRequest(SERVER_LINK + "user", "POST", body);
+    createRequest(SERVER_LINK + "claim", "POST", body);
     loadActualClaims();
   };
 
@@ -124,16 +122,16 @@ const App = () => {
       fullname: updatedClaim.fullname,
       phone: updatedClaim.phone,
       comments: updatedClaim.comments,
-      ati: updatedClaim.phone,
+      ati: updatedClaim.ati,
     };
-    createRequest(SERVER_LINK + `user/${id}`, "PATCH", body);
+    createRequest(SERVER_LINK + `claim`, "PATCH", body);
     loadActualClaims();
   }
 
   // DELETE
   const handleDeleteClaim =  id => {
     setEditing(false);
-    createRequest(SERVER_LINK + `user/${id}`, "DELETE");
+    createRequest(SERVER_LINK + `claim/${id}`, "DELETE");
     loadActualClaims();
   };
 
@@ -144,11 +142,7 @@ const App = () => {
 
       <section>
         <h2>Таблица заявок</h2>
-        {claims ? 
-          <ClaimsView claims={claims} onEdit={handleSelectClaim} onDelete={handleDeleteClaim} /> 
-        : 
-          <p>Загрузка...</p>
-        }
+        {claims && <ClaimsView claims={claims} onEdit={handleSelectClaim} onDelete={handleDeleteClaim} />}
       </section>
 
 
