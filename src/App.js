@@ -3,13 +3,11 @@ import React, { useEffect, useState } from 'react';
 import AddClaimForm from './components/AddClaimForm';
 import EditClaimForm from './components/EditClaimForm';
 import ClaimsView from './components/ClaimsView';
-
-// import useREST from './hooks/useREST';
+// import useREST from './hooks/useREST'; ТОЖЕ ГРОХНУТЬ
 
 /*
 ISSUES
-  - Обработка при удалении и получении заявок
-  - Текст ошибки
+  - Текст ошибки?
   - Функцию запроса на сервер, прелоадер и статусное сообщение - в утил
 
   - Еррор с сервера вместе с данными, заголовки в гет и делит...
@@ -54,71 +52,47 @@ const App = () => {
     });
   };
 
-
-
-  /* Работа с бэком. Приборка */
-/*
-  const {data, isLoading: loading, hasError: error} = useREST(SERVER_LINK + "users");
-  console.log("ДАННЫЕ: " + data);
-  console.log("LOADING: " + loading);
-  console.log("ERROR " + error);
-  console.log("--------------------------------------");
-  */
-
-
-
   // Можно в один объект - респонс стэйт
   const [sendError, setSendError] = useState(null);
   const [sendSuccess, setSendSuccess] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
 
-  // GET
-  const loadActualClaims = async () => {
+  // Может, всё-таки, в useServerCRUD и в hooks? + три стейта выше в один объект и туда же. Хотя не вижу смысла усложнять, вроде и так вполне компактно получилось..
+  const createRequest = async (link, type, body = null) => {
+    const options = {
+      method: type,
+      headers: { "Content-Type": "application/json" },
+    }
+    if (body) options.body = JSON.stringify(body);
 
-    /*
-		fetch(SERVER_LINK + "users")
-			.then(response => response.json())
-			.then(claims => {
-				setClaims(claims.data);
-			})
-    */
-
-      setSendLoading(true);
-      try {
-        // Параметры не нужны для гет, а для делит не нужны хедерс и боди. Но поэкспериментируй и попробуй сделать гет/делит с хедерсами. И подумай что тут сделать с боди можно в этих двух методах
-        const response = await fetch(SERVER_LINK + "users", {
-          method: "GET",
-          
-          headers: { "Content-Type": "application/json" },
-          
-          // body: JSON.stringify(''), не канает. Значит нужно будет условно отрисовывать isHasBody
-          // Пока из того, что меняется - это тип запроса и наличие тела у него. И наличие данных у гет
-          
-        });
-        if (response.ok) {
-
-          // 2 строчки, характерные только для ГЕТ
+    setSendLoading(true);
+    try {
+      const response = await fetch(link, options);
+      if (response.ok) {
+        if (type === "GET") {
           let data = await response.json();
           setClaims(data.data);
-
-          setSendSuccess(true);
-          setTimeout(() => {
-            setSendSuccess(false);
-          }, 3000);
-        };
-        if (!response.ok) {
-          throw new Error(response.statusText);
         }
-      } catch (error) {
-        setSendError(error);
+        setSendSuccess(true);
         setTimeout(() => {
-          setSendError(null);
-        }, 3000);
-        console.dir(error);
-      } finally {
-        setSendLoading(false);
+          setSendSuccess(false);
+        }, 2000);
+      };
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
+    } catch (error) {
+      setSendError(error);
+      console.dir(error);
+    } finally {
+      setSendLoading(false);
+    }
+  }
 
+
+  // GET
+  const loadActualClaims = () => {
+    createRequest(SERVER_LINK + "users", "GET");
 	};
 
   useEffect(() => {
@@ -126,7 +100,7 @@ const App = () => {
   }, [])
   
   // POST
-  const handleAddClaim = async (claim) => {
+  const handleAddClaim = claim => {
     const body = {
       appNumber: claim.appNumber,
       datetime: new Date().toLocaleString().slice(0, -3),
@@ -136,42 +110,13 @@ const App = () => {
       comments: claim.comments,
       ati: claim.phone,
     };
-
-    // Кстати, общую часть-то можно, наверное, вот отсюда начинать.
-    setSendLoading(true);
-    try {
-      // Параметры не нужны для гет, а для делит не нужны хедерс и боди. Но поэкспериментируй и попробуй сделать гет/делит с хедерсами. И подумай что тут сделать с боди можно в этих двух методах
-      const response = await fetch(SERVER_LINK + "user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (response.ok) {
-        setSendSuccess(true);
-        setTimeout(() => {
-          setSendSuccess(false);
-        }, 3000);
-      };
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-    } catch (error) {
-      setSendError(error);
-      setTimeout(() => {
-        setSendError(null);
-      }, 3000);
-      console.dir(error);
-    } finally {
-      setSendLoading(false);
-    }
-
+    createRequest(SERVER_LINK + "user", "POST", body);
     loadActualClaims();
   };
 
   // PATCH
-  const handleUpdateClaim = async (id, updatedClaim) => {
+  const handleUpdateClaim = (id, updatedClaim) => {
     setEditing(false)
-
     const body = {
       appNumber: updatedClaim.appNumber,
       datetime: updatedClaim.datetime,
@@ -181,44 +126,14 @@ const App = () => {
       comments: updatedClaim.comments,
       ati: updatedClaim.phone,
     };
-
-    setSendLoading(true);
-    try {
-      const response = await fetch(SERVER_LINK + `user/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (response.ok) {
-        setSendSuccess(true);
-        setTimeout(() => {
-          setSendSuccess(false);
-        }, 3000);
-      };
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-    } catch (error) {
-      setSendError(error);
-      setTimeout(() => {
-        setSendError(null);
-      }, 3000);
-      console.dir(error);
-    } finally {
-      setSendLoading(false);
-    }
-
+    createRequest(SERVER_LINK + `user/${id}`, "PATCH", body);
     loadActualClaims();
   }
 
   // DELETE
-  const handleDeleteClaim = id => {
+  const handleDeleteClaim =  id => {
     setEditing(false);
-
-    fetch(SERVER_LINK + `user/${id}`, {
-      method: 'DELETE'
-    });
-
+    createRequest(SERVER_LINK + `user/${id}`, "DELETE");
     loadActualClaims();
   };
 
