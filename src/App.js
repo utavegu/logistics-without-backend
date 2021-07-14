@@ -4,8 +4,16 @@ import AddClaimForm from './components/AddClaimForm';
 import EditClaimForm from './components/EditClaimForm';
 import ClaimsView from './components/ClaimsView';
 
+// import useREST from './hooks/useREST';
+
 /*
 ISSUES
+  - Обработка при удалении и получении заявок
+  - Текст ошибки
+  - Функцию запроса на сервер, прелоадер и статусное сообщение - в утил
+
+  - Еррор с сервера вместе с данными, заголовки в гет и делит...
+
   - Обработку ошибок и загрузки для взаимодействия с сервером +-
   - Моки на сервер и генерацию айдишника туда же
   - На сервере имена эндпоинтов тоже поменять... юзерс блин
@@ -49,23 +57,73 @@ const App = () => {
 
 
   /* Работа с бэком. Приборка */
+/*
+  const {data, isLoading: loading, hasError: error} = useREST(SERVER_LINK + "users");
+  console.log("ДАННЫЕ: " + data);
+  console.log("LOADING: " + loading);
+  console.log("ERROR " + error);
+  console.log("--------------------------------------");
+  */
 
+
+
+  // Можно в один объект - респонс стэйт
   const [sendError, setSendError] = useState(null);
   const [sendSuccess, setSendSuccess] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
 
   // GET
-  const loadActualClaims = () => {
+  const loadActualClaims = async () => {
+
+    /*
 		fetch(SERVER_LINK + "users")
 			.then(response => response.json())
 			.then(claims => {
 				setClaims(claims.data);
 			})
+    */
+
+      setSendLoading(true);
+      try {
+        // Параметры не нужны для гет, а для делит не нужны хедерс и боди. Но поэкспериментируй и попробуй сделать гет/делит с хедерсами. И подумай что тут сделать с боди можно в этих двух методах
+        const response = await fetch(SERVER_LINK + "users", {
+          method: "GET",
+          
+          headers: { "Content-Type": "application/json" },
+          
+          // body: JSON.stringify(''), не канает. Значит нужно будет условно отрисовывать isHasBody
+          // Пока из того, что меняется - это тип запроса и наличие тела у него. И наличие данных у гет
+          
+        });
+        if (response.ok) {
+
+          // 2 строчки, характерные только для ГЕТ
+          let data = await response.json();
+          setClaims(data.data);
+
+          setSendSuccess(true);
+          setTimeout(() => {
+            setSendSuccess(false);
+          }, 3000);
+        };
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+      } catch (error) {
+        setSendError(error);
+        setTimeout(() => {
+          setSendError(null);
+        }, 3000);
+        console.dir(error);
+      } finally {
+        setSendLoading(false);
+      }
+
 	};
 
   useEffect(() => {
     loadActualClaims();
-  }, [claims])
+  }, [])
   
   // POST
   const handleAddClaim = async (claim) => {
@@ -79,8 +137,10 @@ const App = () => {
       ati: claim.phone,
     };
 
+    // Кстати, общую часть-то можно, наверное, вот отсюда начинать.
+    setSendLoading(true);
     try {
-      setSendLoading(true);
+      // Параметры не нужны для гет, а для делит не нужны хедерс и боди. Но поэкспериментируй и попробуй сделать гет/делит с хедерсами. И подумай что тут сделать с боди можно в этих двух методах
       const response = await fetch(SERVER_LINK + "user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -104,6 +164,8 @@ const App = () => {
     } finally {
       setSendLoading(false);
     }
+
+    loadActualClaims();
   };
 
   // PATCH
@@ -120,8 +182,8 @@ const App = () => {
       ati: updatedClaim.phone,
     };
 
+    setSendLoading(true);
     try {
-      setSendLoading(true);
       const response = await fetch(SERVER_LINK + `user/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -145,6 +207,8 @@ const App = () => {
     } finally {
       setSendLoading(false);
     }
+
+    loadActualClaims();
   }
 
   // DELETE
@@ -153,7 +217,9 @@ const App = () => {
 
     fetch(SERVER_LINK + `user/${id}`, {
       method: 'DELETE'
-    })
+    });
+
+    loadActualClaims();
   };
 
 
@@ -172,9 +238,9 @@ const App = () => {
 
 
       {/* СТАТУСЫ */}
-      {sendLoading && <p style={{backgroundColor: "yellow"}}>Загрузка...</p>}
-      {sendError && <p style={{backgroundColor: "red"}}>Ошибка отправки запроса!</p>}
-      {sendSuccess && <p style={{backgroundColor: "green"}}>Запрос успешно отправлен!</p>}
+      {sendLoading && <p style={{backgroundColor: "yellow"}}>Loading...</p>}
+      {sendError && <p style={{backgroundColor: "red"}}>Error!</p>}
+      {sendSuccess && <p style={{backgroundColor: "green"}}>Success!</p>}
 
 
       <div className="form-place">
