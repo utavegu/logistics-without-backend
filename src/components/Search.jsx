@@ -20,7 +20,9 @@ const Search = ({queryString, setQueryString}) => {
         value={queryString}
         onChange={handleQuery}
         type="search"
-        placeholder="Поиск"
+        placeholder="Поиск (комментарии, телефон, ATI)"
+        // ВРЕМЕННО
+        style={{width: "100%"}}
       />
     </form>
   )
