@@ -1,68 +1,41 @@
 import React, { useEffect, useState } from 'react';
-// import ClaimModel from './models/ClaimModel'; В моделз тоже подчистить, когда всё закончу
 import AddClaimForm from './components/AddClaimForm';
 import EditClaimForm from './components/EditClaimForm';
 import ClaimsView from './components/ClaimsView';
+import ClaimModel from './models/ClaimModel'; // В моделз тоже подчистить, когда всё закончу
 // import useREST from './hooks/useREST'; ТОЖЕ ГРОХНУТЬ
 
 /*
 ISSUES
   - Текст ошибки?
   - Функцию запроса на сервер, прелоадер и статусное сообщение - в утил
-
   - Обработку ошибок и загрузки для взаимодействия с сервером +-
-  - Моки на сервер и генерацию айдишника туда же
-  - На сервере имена эндпоинтов тоже поменять... юзерс блин
-
-  - DRY!
-  
+  - DRY! +-
   - Секшинам классы
+  - Манкитестинг
 */
 
 const SERVER_LINK = "http://localhost:4000/api/"
-
-const initialFormState = {
-  appNumber: null,
-  datetime: "",
-  firmName: "",
-  fullname: "",
-  phone: "",
-  comments: "",
-  ati: "",
-};
+const initialFormState = new ClaimModel(null, "", "", "", "", "", "");
+// А ещё у меня есть смутные воспоминания, что с батареей атрибутов можно как-то более лучше работать... рест-спред... но тот ли это случай. Вот если 1 раз задать объект, а потом какое-то одно свойство переопределять, тогда да... а тут вряд ли.
 
 const App = () => {
 
-  const [claims, setClaims] = useState(null);
+  const [claims, setClaims] = useState(null); // Если в хук, то дата. А ты тут и останешься клэймзом. А для тебя вообще нужен будет стейт? Вроде нет... лишние перерисовки. Поэкспериментирую. Можно же деструктурировать прямо из хука и в дочерний компонент отдавать данные по тому же принципу, через &&.
+  const [sendSuccess, setSendSuccess] = useState(false);
+  const [sendError, setSendError] = useState(null);
+  const [sendLoading, setSendLoading] = useState(false);
+
   const [editing, setEditing] = useState(false);
   const [currentClaim, setCurrentClaim] = useState(initialFormState);
 
-  const handleSelectClaim = claim => {
-    setEditing(true);
-    setCurrentClaim({
-      appNumber: claim.appNumber,
-      datetime: claim.datetime,
-      firmName: claim.firmName,
-      fullname: claim.fullname,
-      phone: claim.phone,
-      comments: claim.comments,
-      ati: claim.ati,
-    });
-  };
-
-  // Можно в один объект - респонс стэйт
-  const [sendError, setSendError] = useState(null);
-  const [sendSuccess, setSendSuccess] = useState(false);
-  const [sendLoading, setSendLoading] = useState(false);
-
-  // Может, всё-таки, в useServerCRUD и в hooks? + три стейта выше в один объект и туда же. Хотя не вижу смысла усложнять, вроде и так вполне компактно получилось..
+  // Подумывал эту функцию и 4 верхних стейта (предварительно собрав их в 1 объект) вынести в отдельный хук, но пусть будет так - уже вполне компактно получилось. Вообще неплохая идея, вроде. Но давай сначала заканчивай с поиском и фильтрами, далее если буду успевать, отрефакторю. (useServerCRUD)
   const createRequest = async (link, type, body = null) => {
     const options = {
       method: type,
       headers: { "Content-Type": "application/json" },
     }
     if (body) options.body = JSON.stringify(body);
-
     setSendLoading(true);
     try {
       const response = await fetch(link, options);
@@ -87,8 +60,12 @@ const App = () => {
     }
   }
 
+  const handleSelectClaim = claim => {
+    setEditing(true);
+    setCurrentClaim(new ClaimModel(claim.appNumber, claim.datetime, claim.firmName, claim.fullname, claim.phone, claim.comments, claim.ati));
+  };
 
-  // GET
+
   const loadActualClaims = () => {
     createRequest(SERVER_LINK + "claims", "GET");
 	};
@@ -97,38 +74,22 @@ const App = () => {
     loadActualClaims();
   }, [])
   
-  // POST
   const handleAddClaim = claim => {
-    const body = {
-      appNumber: claim.appNumber,
-      datetime: new Date().toLocaleString().slice(0, -3),
-      firmName: claim.firmName,
-      fullname: claim.fullname,
-      phone: claim.phone,
-      comments: claim.comments,
-      ati: claim.ati,
-    };
+    // Вот тут можно через рест-спред одно поле заменить. Подумаю об этом позже.
+    const body = new ClaimModel(claim.appNumber, new Date().toLocaleString().slice(0, -3), claim.firmName, claim.fullname, claim.phone, claim.comments, claim.ati);
     createRequest(SERVER_LINK + "claim", "POST", body);
     loadActualClaims();
   };
 
-  // PATCH
   const handleUpdateClaim = (id, updatedClaim) => {
+    // Так... рудиментарный айдишник от безбэкэндовой версии. Почистить
+    // Кстати можно и без апдейтед... нужно больше компактности и рефакторинга
     setEditing(false)
-    const body = {
-      appNumber: updatedClaim.appNumber,
-      datetime: updatedClaim.datetime,
-      firmName: updatedClaim.firmName,
-      fullname: updatedClaim.fullname,
-      phone: updatedClaim.phone,
-      comments: updatedClaim.comments,
-      ati: updatedClaim.ati,
-    };
+    const body = new ClaimModel(updatedClaim.appNumber, updatedClaim.datetime, updatedClaim.firmName, updatedClaim.fullname, updatedClaim.phone, updatedClaim.comments, updatedClaim.ati);
     createRequest(SERVER_LINK + `claim`, "PATCH", body);
     loadActualClaims();
   }
 
-  // DELETE
   const handleDeleteClaim =  id => {
     setEditing(false);
     createRequest(SERVER_LINK + `claim/${id}`, "DELETE");
@@ -145,12 +106,13 @@ const App = () => {
         {claims && <ClaimsView claims={claims} onEdit={handleSelectClaim} onDelete={handleDeleteClaim} />}
       </section>
 
-
       {/* СТАТУСЫ */}
+      {/* Тут вам точно не место, чтобы разметку не двигали. Думаю, вас стоит вырвать из потока вообще и дать вам отдельную коробку. Коробку отображать по конструкции вида:
+      sendLoading || sendError || sendSuccess || "общий контейнер"
+      */}
       {sendLoading && <p style={{backgroundColor: "yellow"}}>Loading...</p>}
       {sendError && <p style={{backgroundColor: "red"}}>Error!</p>}
       {sendSuccess && <p style={{backgroundColor: "green"}}>Success!</p>}
-
 
       <div className="form-place">
         {editing ? (
