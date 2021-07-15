@@ -4,17 +4,12 @@ import EditClaimForm from './components/EditClaimForm';
 import ClaimsView from './components/ClaimsView';
 import ClaimModel from './models/ClaimModel';
 import Modal from './components/Modal';
+import { Status } from './common'
 
 /*
-- Статусбар
-- Стилизация
-- Оставшийся рефакторинг
-
-
 ISSUES
-  - Текст ошибки?
-  - Функцию запроса на сервер, прелоадер и статусное сообщение - в утил
-  - Обработку ошибок и загрузки для взаимодействия с сервером +-
+  - Стилизация
+  - Оставшийся рефакторинг
   - DRY! +-
   - Секшинам классы
   - Манкитестинг
@@ -25,18 +20,15 @@ const initialFormState = new ClaimModel(null, "", "", "", "", "", "");
 // А ещё у меня есть смутные воспоминания, что с батареей атрибутов можно как-то более лучше работать... рест-спред... но тот ли это случай. Вот если 1 раз задать объект, а потом какое-то одно свойство переопределять, тогда да... а тут вряд ли.
 
 const App = () => {
-
   const [claims, setClaims] = useState(null);
-
-  // Вот тебя давай всё-таки переделаю в один объект. Ну, кстати, и клэймз туда же можно. Но не нужно. Вы статусы, а клеймз - данные.
-  const [sendSuccess, setSendSuccess] = useState(false);
-  const [sendError, setSendError] = useState(null);
-  const [sendLoading, setSendLoading] = useState(false);
-
   const [editing, setEditing] = useState(false);
   const [currentClaim, setCurrentClaim] = useState(initialFormState);
-
-  const [modalActive, setModalActive] = useState(false); // Блин, что-то я разошелся. Удаляй их везде по одному и смотри, сломалось или нет. Обязательно после модалки потести, всё ли работает как надо, потом наконец-то стилизуй. Рефакторинг оставшийся на завтра на утро.
+  const [modalActive, setModalActive] = useState(false);
+  const [responseState, setResponseState] = useState({
+    success: false,
+    loading: false,
+    error: null,
+  });
 
   // Вынес это дело в кастомный хук (лежит в hooks), в рамках рефакторинга, но переделывать на него уже не стал, так как опасаюсь всё разломать перед сдачей проекта. Так тоже вполне компактно получилось.
   const createRequest = async (link, type, body = null) => {
@@ -45,7 +37,7 @@ const App = () => {
       headers: { "Content-Type": "application/json" },
     }
     if (body) options.body = JSON.stringify(body);
-    setSendLoading(true);
+    setResponseState(prev => ({...prev, loading: true}));
     try {
       const response = await fetch(link, options);
       if (response.ok) {
@@ -53,19 +45,19 @@ const App = () => {
           let data = await response.json();
           setClaims(data.data);
         }
-        setSendSuccess(true);
+        setResponseState(prev => ({...prev, success: true}));
         setTimeout(() => {
-          setSendSuccess(false);
-        }, 2000);
+          setResponseState(prev => ({...prev, success: false}));
+        }, 1000);
       };
       if (!response.ok) {
         throw new Error(response.statusText);
       }
     } catch (error) {
-      setSendError(error);
+      setResponseState(prev => ({...prev, error: error}));
       console.dir(error);
     } finally {
-      setSendLoading(false);
+      setResponseState(prev => ({...prev, loading: false}));
     }
   }
 
@@ -91,12 +83,10 @@ const App = () => {
     loadActualClaims();
   };
 
-  const handleUpdateClaim = (id, updatedClaim) => {
-    // Так... рудиментарный айдишник от безбэкэндовой версии. Почистить
-    // Кстати можно и без апдейтед... нужно больше компактности и рефакторинга
+  const handleUpdateClaim = claim => {
     setEditing(false);
     setModalActive(false);
-    const body = new ClaimModel(updatedClaim.appNumber, updatedClaim.datetime, updatedClaim.firmName, updatedClaim.fullname, updatedClaim.phone, updatedClaim.comments, updatedClaim.ati);
+    const body = new ClaimModel(claim.appNumber, claim.datetime, claim.firmName, claim.fullname, claim.phone, claim.comments, claim.ati);
     createRequest(SERVER_LINK + `claim`, "PATCH", body);
     loadActualClaims();
   }
@@ -111,10 +101,6 @@ const App = () => {
   return (
     <main className="container">
       <h1 className="visually-hidden">Система ведения заявок для логистов в автогрузоперевозках</h1>
-
-        {sendLoading && <p style={{backgroundColor: "black", color: "yellow", position: "absolute", top: "50%", left: "50%", width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%"}}>Loading...</p>}
-        {sendError && <p style={{backgroundColor: "black", color: "red", position: "absolute", top: "50%", left: "50%", width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%"}}>Error!</p>}
-        {sendSuccess && <p style={{backgroundColor: "black", color: "green", position: "absolute", top: "50%", left: "50%", width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%"}}>Success!</p>}
 
       <section>
         <h2>Таблица заявок</h2>
@@ -147,6 +133,8 @@ const App = () => {
           </section>
         )}
       </Modal>
+
+      {Status(responseState.loading, responseState.error, responseState.success)}
 
     </main>
   );

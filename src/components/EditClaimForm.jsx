@@ -28,7 +28,7 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
 
   const handleSubmit = evt => {
     evt.preventDefault()
-    handleUpdateClaim(targetClaim.appNumber, targetClaim)
+    handleUpdateClaim(targetClaim)
   }
 
   const handleCancel = () => {
