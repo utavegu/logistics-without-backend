@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 /*
@@ -9,6 +9,11 @@ ISSUES
 const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdateClaim, setModalActive}) => {
 
   const [targetClaim, setTargetClaim] = useState(currentClaim)
+
+  const firstInput = useRef(null);
+  useEffect(() => {
+    if (firstInput.current !== null) firstInput.current.focus();
+  }, [handleUpdateClaim])
 
   useEffect(
     () => {
@@ -42,6 +47,7 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
           name="firmName"
           value={targetClaim.firmName}
           onChange={handleInputChange}
+          ref={firstInput}
         />
       </p>
 

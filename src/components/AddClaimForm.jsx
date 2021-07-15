@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 /*
@@ -25,6 +25,11 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
 
   const [claimData, setClaimData] = useState(initialFormState);
 
+  const firstInput = useRef(null);
+  useEffect(() => {
+    if (firstInput.current !== null) firstInput.current.focus();
+  }, [handleAddClaim])
+
   const handleInputChange = ({target}) => {
     setClaimData({ ...claimData, [target.name]: target.value });
   };
@@ -48,7 +53,7 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
           value={claimData.firmName}
           onChange={handleInputChange}
           required
-          autoFocus={true}
+          ref={firstInput}
         />
       </p>
 
