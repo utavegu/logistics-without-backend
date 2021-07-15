@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import s from './ClaimsTable.module.css';
+
 
 /*
 ISSUES:
@@ -17,7 +19,7 @@ const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
   }
 
   return (
-    <table>
+    <table className={s.claims_table}>
       <thead>
         <tr>
           <th>Номер заявки</th>
@@ -27,6 +29,7 @@ const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
           <th>Контактный телефон перевозчика</th>
           <th>Комментарии</th>
           <th>ATI код сети перевозчика</th>
+          <th>Действия</th>
         </tr>
       </thead>
       <tbody>

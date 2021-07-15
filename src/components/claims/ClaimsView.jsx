@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ClaimsTable from './ClaimsTable';
-import Filters from './Filters';
-import Search from './Search';
+import Filters from '../options/Filters';
+import Search from '../options/Search';
 
 
 const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteClaim}) => {

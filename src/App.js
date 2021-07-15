@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import AddClaimForm from './components/AddClaimForm';
-import EditClaimForm from './components/EditClaimForm';
-import ClaimsView from './components/ClaimsView';
+import AddClaimForm from './components/forms/AddClaimForm';
+import EditClaimForm from './components/forms/EditClaimForm';
+import ClaimsView from './components/claims/ClaimsView';
 import ClaimModel from './models/ClaimModel';
 import Modal from './components/Modal';
 import { Status } from './common'
