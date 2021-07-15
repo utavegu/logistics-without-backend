@@ -6,7 +6,7 @@ ISSUES
   1) То же самое, что и в форме добавления заявки
 */
 
-const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdateClaim}) => {
+const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdateClaim, setModalActive}) => {
 
   const [targetClaim, setTargetClaim] = useState(currentClaim)
 
@@ -24,6 +24,11 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
   const handleSubmit = evt => {
     evt.preventDefault()
     handleUpdateClaim(targetClaim.appNumber, targetClaim)
+  }
+
+  const handleCancel = () => {
+    setModalActive(false);
+    setEditing(false);
   }
 
 
@@ -81,7 +86,7 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
       </p>
 
       <button type="submit">Подтвердить изменения</button>
-      <button type="button" onClick={() => setEditing(false)}>Отмена</button>
+      <button type="button" onClick={handleCancel}>Отмена</button>
       
     </form>
   )

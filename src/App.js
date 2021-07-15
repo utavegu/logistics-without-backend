@@ -3,8 +3,14 @@ import AddClaimForm from './components/AddClaimForm';
 import EditClaimForm from './components/EditClaimForm';
 import ClaimsView from './components/ClaimsView';
 import ClaimModel from './models/ClaimModel';
+import Modal from './components/Modal';
 
 /*
+- Статусбар
+- Стилизация
+- Оставшийся рефакторинг
+
+
 ISSUES
   - Текст ошибки?
   - Функцию запроса на сервер, прелоадер и статусное сообщение - в утил
@@ -29,6 +35,8 @@ const App = () => {
 
   const [editing, setEditing] = useState(false);
   const [currentClaim, setCurrentClaim] = useState(initialFormState);
+
+  const [modalActive, setModalActive] = useState(false); // Блин, что-то я разошелся. Удаляй их везде по одному и смотри, сломалось или нет. Обязательно после модалки потести, всё ли работает как надо, потом наконец-то стилизуй. Рефакторинг оставшийся на завтра на утро.
 
   // Вынес это дело в кастомный хук (лежит в hooks), в рамках рефакторинга, но переделывать на него уже не стал, так как опасаюсь всё разломать перед сдачей проекта. Так тоже вполне компактно получилось.
   const createRequest = async (link, type, body = null) => {
@@ -63,6 +71,7 @@ const App = () => {
 
   const handleSelectClaim = claim => {
     setEditing(true);
+    setModalActive(true);
     setCurrentClaim(new ClaimModel(claim.appNumber, claim.datetime, claim.firmName, claim.fullname, claim.phone, claim.comments, claim.ati));
   };
 
@@ -85,7 +94,8 @@ const App = () => {
   const handleUpdateClaim = (id, updatedClaim) => {
     // Так... рудиментарный айдишник от безбэкэндовой версии. Почистить
     // Кстати можно и без апдейтед... нужно больше компактности и рефакторинга
-    setEditing(false)
+    setEditing(false);
+    setModalActive(false);
     const body = new ClaimModel(updatedClaim.appNumber, updatedClaim.datetime, updatedClaim.firmName, updatedClaim.fullname, updatedClaim.phone, updatedClaim.comments, updatedClaim.ati);
     createRequest(SERVER_LINK + `claim`, "PATCH", body);
     loadActualClaims();
@@ -104,7 +114,14 @@ const App = () => {
 
       <section>
         <h2>Таблица заявок</h2>
-        {claims && <ClaimsView claims={claims} onEdit={handleSelectClaim} onDelete={handleDeleteClaim} />}
+        <button onClick={() => setModalActive(true)}>Создать новую заявку</button>
+        {claims 
+        && 
+        <ClaimsView
+          claims={claims}
+          onEdit={handleSelectClaim}
+          onDelete={handleDeleteClaim}
+        />}
       </section>
 
       {/* СТАТУСЫ */}
@@ -115,7 +132,7 @@ const App = () => {
       {sendError && <p style={{backgroundColor: "red"}}>Error!</p>}
       {sendSuccess && <p style={{backgroundColor: "green"}}>Success!</p>}
 
-      <div className="form-place">
+      <Modal active={modalActive} setActive={setModalActive} setEditing={setEditing}>
         {editing ? (
           <section>
             <h2>Редактировать заявку</h2>
@@ -124,15 +141,16 @@ const App = () => {
               setEditing={setEditing}
               currentClaim={currentClaim}
               onUpdate={handleUpdateClaim}
+              setModalActive={setModalActive}
             />
           </section>
         ) : (
           <section>
             <h2>Создать новую заявку</h2>
-            <AddClaimForm onAdd={handleAddClaim} />
+            <AddClaimForm onAdd={handleAddClaim} setModalActive={setModalActive} />
           </section>
         )}
-      </div>
+      </Modal>
 
     </main>
   );

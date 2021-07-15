@@ -37,7 +37,11 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
         <Filters claims={claims} onGetFilters={handleGetFilters} />
         <Search queryString={queryString} setQueryString={setQueryString} />
       </section>
-      <ClaimsTable claims={foundClaims} handleSelectClaim={handleSelectClaim} handleDeleteClaim={handleDeleteClaim} />
+      <ClaimsTable
+        claims={foundClaims}
+        handleSelectClaim={handleSelectClaim}
+        handleDeleteClaim={handleDeleteClaim}
+      />
     </>
   )
 }

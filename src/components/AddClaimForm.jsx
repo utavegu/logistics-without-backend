@@ -11,7 +11,7 @@ ISSUES:
   6) Стилизация
 */
 
-const AddClaimForm = ({onAdd: handleAddClaim}) => {
+const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
 
   const initialFormState = {
     appNumber: null,
@@ -33,6 +33,7 @@ const AddClaimForm = ({onAdd: handleAddClaim}) => {
     evt.preventDefault();
     handleAddClaim(claimData);
     setClaimData(initialFormState);
+    setModalActive(false);
   };
 
 
@@ -47,6 +48,7 @@ const AddClaimForm = ({onAdd: handleAddClaim}) => {
           value={claimData.firmName}
           onChange={handleInputChange}
           required
+          autoFocus={true}
         />
       </p>
 
