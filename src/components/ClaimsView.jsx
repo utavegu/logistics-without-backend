@@ -37,7 +37,8 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
     &&
     filtersState.carrier === "all" ? setFiltredClaims(claims) : setFiltredClaims(
       claims.slice().filter(claim => claim.fullname === filtersState.carrier)
-    )
+    ) // Так, в данный момент ты правильно реагируешь именно на перевозчика. Но только если в других пунктах нет "всех заявок"... Так, думай... Нет, только если в первом пункте "все".
+    // Давай ещё раз. В датах не должны быть выбраны "все даты", в фирмах может быть что угодно. Тогда работает фильтр по перевозчику. Но только если там не все перевозчики. Я уверен, ещё одна кружка чая и я приду к разгадке.
   };
 
   /*

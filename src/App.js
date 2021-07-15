@@ -118,7 +118,7 @@ const App = () => {
       <div className="form-place">
         {editing ? (
           <section>
-            <h2>Редактировать пользователя</h2>
+            <h2>Редактировать заявку</h2>
             <EditClaimForm
               editing={editing}
               setEditing={setEditing}
