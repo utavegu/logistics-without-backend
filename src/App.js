@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AddClaimForm from './components/AddClaimForm';
 import EditClaimForm from './components/EditClaimForm';
 import ClaimsView from './components/ClaimsView';
-import ClaimModel from './models/ClaimModel'; // В моделз тоже подчистить, когда всё закончу
-// import useREST from './hooks/useREST'; ТОЖЕ ГРОХНУТЬ
+import ClaimModel from './models/ClaimModel';
 
 /*
 ISSUES
@@ -21,7 +20,9 @@ const initialFormState = new ClaimModel(null, "", "", "", "", "", "");
 
 const App = () => {
 
-  const [claims, setClaims] = useState(null); // Если в хук, то дата. А ты тут и останешься клэймзом. А для тебя вообще нужен будет стейт? Вроде нет... лишние перерисовки. Поэкспериментирую. Можно же деструктурировать прямо из хука и в дочерний компонент отдавать данные по тому же принципу, через &&.
+  const [claims, setClaims] = useState(null);
+
+  // Вот тебя давай всё-таки переделаю в один объект. Ну, кстати, и клэймз туда же можно. Но не нужно. Вы статусы, а клеймз - данные.
   const [sendSuccess, setSendSuccess] = useState(false);
   const [sendError, setSendError] = useState(null);
   const [sendLoading, setSendLoading] = useState(false);
@@ -29,8 +30,7 @@ const App = () => {
   const [editing, setEditing] = useState(false);
   const [currentClaim, setCurrentClaim] = useState(initialFormState);
 
-  // Подумывал эту функцию и 4 верхних стейта (предварительно собрав их в 1 объект) вынести в отдельный хук, но пусть будет так - уже вполне компактно получилось. Вообще неплохая идея, вроде. Но давай сначала заканчивай с поиском и фильтрами, далее если буду успевать, отрефакторю. (useServerCRUD)
-  // Только обязательно засеки количество перерисовок в каждом случае (с хуком и как сейчас), потыкавшись по всем КРУД-функциям
+  // Вынес это дело в кастомный хук (лежит в hooks), в рамках рефакторинга, но переделывать на него уже не стал, так как опасаюсь всё разломать перед сдачей проекта. Так тоже вполне компактно получилось.
   const createRequest = async (link, type, body = null) => {
     const options = {
       method: type,

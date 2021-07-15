@@ -15,7 +15,7 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
       setFiltredClaims(claims);
     },
     [claims]
-  )
+  );
 
   const handleGetFilters = (filtersState) => {
     const multifilter = claims
@@ -48,5 +48,5 @@ ClaimsView.propTypes = {
   handleDeleteClaim: PropTypes.func,
 };
 
-export default ClaimsView
+export default ClaimsView;
 
