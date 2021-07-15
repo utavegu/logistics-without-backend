@@ -4,11 +4,6 @@ import ClaimsTable from './ClaimsTable';
 import Filters from './Filters';
 import Search from './Search';
 
-/*
-ISSUES:
-  - Оптимизировать поиск
-  - Подумать над лишними пробросами через переменные в хэндлГетФильтрз
-*/
 
 const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteClaim}) => {
 
@@ -23,29 +18,16 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
   )
 
   const handleGetFilters = (filtersState) => {
-    // С одной стороны - лишние пробросы через переменные, с другой - так читабельнее... Подумаю ещё над этим
-    const dateFilter = claim => (filtersState.date === "all" || claim.datetime.slice(0, -7) === filtersState.date);
-    const firmFilter = claim => (filtersState.firm === "all" || claim.firmName === filtersState.firm);
-    const carrierFilter = claim => (filtersState.carrier === "all" || claim.fullname === filtersState.carrier);
-
     const multifilter = claims
-      .filter(dateFilter)
-      .filter(firmFilter)
-      .filter(carrierFilter);
+      .filter(claim => (filtersState.date === "all" || claim.datetime.slice(0, -7) === filtersState.date))
+      .filter(claim => (filtersState.firm === "all" || claim.firmName === filtersState.firm))
+      .filter(claim => (filtersState.carrier === "all" || claim.fullname === filtersState.carrier));
 
     setFiltredClaims(multifilter);
   };
 
-
-  const foundClaims = filtredClaims
-    .slice()
-    .filter(claim => 
-      claim.comments.toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1
-      ||
-      claim.phone.toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1
-      ||
-      claim.ati.toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1
-    );
+  const isFoundInField = claim => field => claim[field].toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1;
+  const foundClaims = filtredClaims.filter(claim => isFoundInField(claim)('comments') || isFoundInField(claim)('phone') || isFoundInField(claim)('ati'));
 
 
   return (
