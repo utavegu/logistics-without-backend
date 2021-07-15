@@ -112,6 +112,10 @@ const App = () => {
     <main className="container">
       <h1 className="visually-hidden">Система ведения заявок для логистов в автогрузоперевозках</h1>
 
+        {sendLoading && <p style={{backgroundColor: "black", color: "yellow", position: "absolute", top: "50%", left: "50%", width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%"}}>Loading...</p>}
+        {sendError && <p style={{backgroundColor: "black", color: "red", position: "absolute", top: "50%", left: "50%", width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%"}}>Error!</p>}
+        {sendSuccess && <p style={{backgroundColor: "black", color: "green", position: "absolute", top: "50%", left: "50%", width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%"}}>Success!</p>}
+
       <section>
         <h2>Таблица заявок</h2>
         <button onClick={() => setModalActive(true)}>Создать новую заявку</button>
@@ -123,14 +127,6 @@ const App = () => {
           onDelete={handleDeleteClaim}
         />}
       </section>
-
-      {/* СТАТУСЫ */}
-      {/* Тут вам точно не место, чтобы разметку не двигали. Думаю, вас стоит вырвать из потока вообще и дать вам отдельную коробку. Коробку отображать по конструкции вида:
-      sendLoading || sendError || sendSuccess || "общий контейнер"
-      */}
-      {sendLoading && <p style={{backgroundColor: "yellow"}}>Loading...</p>}
-      {sendError && <p style={{backgroundColor: "red"}}>Error!</p>}
-      {sendSuccess && <p style={{backgroundColor: "green"}}>Success!</p>}
 
       <Modal active={modalActive} setActive={setModalActive} setEditing={setEditing}>
         {editing ? (
