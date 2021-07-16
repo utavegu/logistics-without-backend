@@ -42,6 +42,7 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
     setModalActive(false);
   };
 
+  
 
   return (
     <form className={s.claim_form} onSubmit={handleSubmit}>

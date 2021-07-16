@@ -13,12 +13,28 @@
   position: relative;
 }
 
+.claims_table tr {
+  vertical-align: top;
+}
+
 .claims_table tr:nth-child(odd) {
   background: #ebf3f9;
 }
 
 .claims_table td {
-  border: 1px solid #e3eef7;
   padding: 10px 15px;
+}
+
+.claims_table td:first-child {
+  text-align: center;
+}
+
+.claims_table a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.claims_table a:hover {
+  color: #0250bc;
 }
 

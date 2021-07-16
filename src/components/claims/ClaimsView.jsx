@@ -30,6 +30,7 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
   const isFoundInField = claim => field => claim[field].toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1;
   const foundClaims = filtredClaims.filter(claim => isFoundInField(claim)('comments') || isFoundInField(claim)('phone') || isFoundInField(claim)('ati'));
 
+  
 
   return (
     <>

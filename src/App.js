@@ -97,13 +97,13 @@ const App = () => {
     loadActualClaims();
   };
 
-
+ 
   return (
     <main className="container">
       <h1 className="visually-hidden">Система ведения заявок для логистов в автогрузоперевозках</h1>
 
       <section>
-        <h2>Таблица заявок</h2>
+        <h2 style={{textAlign: "center"}}>Таблица заявок</h2>
         <button className="button button-add" onClick={() => setModalActive(true)}>Создать новую заявку</button>
         {claims 
         && 

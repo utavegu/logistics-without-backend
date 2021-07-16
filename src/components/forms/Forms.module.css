@@ -12,3 +12,8 @@
 .claim_form p  {
   text-align: left;
 }
+
+.button_block {
+  display: flex;
+  justify-content: space-between;
+}

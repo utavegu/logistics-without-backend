@@ -52,6 +52,7 @@ const Filters = ({claims, onGetFilters: handleGetFilters}) => {
   );
 
   
+  
   return (
     <form className={s.filters}>
       <select name="date" value={filters.date} onChange={handleInputChange}>

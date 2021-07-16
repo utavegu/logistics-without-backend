@@ -37,7 +37,7 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
     setEditing(false);
   }
 
-
+  
   return (
     <form className={s.claim_form} onSubmit={handleSubmit}>
 
@@ -92,8 +92,10 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
         />
       </p>
 
-      <button className="button" type="submit">Подтвердить изменения</button>
-      <button className="button" type="button" onClick={handleCancel}>Отмена</button>
+      <div className={s.button_block}>
+        <button className="button" type="submit">Подтвердить изменения</button>
+        <button className="button" type="button" onClick={handleCancel}>Отмена</button>
+      </div>
       
     </form>
   )

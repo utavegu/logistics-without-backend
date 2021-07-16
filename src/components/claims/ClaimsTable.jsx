@@ -11,6 +11,8 @@ ISSUES:
   4) Стилизация
 */
 
+
+
 const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
 
   const handleConfirmDeleteClaim = id => {
@@ -55,7 +57,7 @@ const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
           ))
         ) : (
           <tr>
-            <td colSpan={3}>Заявок нет!</td>
+            <td colSpan={8}>Заявок нет!</td>
           </tr>
         )}
       </tbody>
