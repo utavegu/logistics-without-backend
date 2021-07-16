@@ -8,11 +8,24 @@ html {
   box-sizing: inherit;
 }
 
+@media (min-width: 425) {
+  h1 {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 768) {
+  h1 {
+    font-size: 36px;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-size: 12px;
 }
 
 a {
@@ -45,12 +58,11 @@ img {
 h1 {
   text-align: right;
   border-bottom: 5px solid #0250bc;
-  font-size: 42px;
   color: transparent;
   background-clip: text;
 	background-image: linear-gradient(to right, #68c7d5, #68c7d5, #f6373e);
+  font-size: 24px;
 }
-
 
 .button {
   display: inline-block;
@@ -130,5 +142,23 @@ h1 {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAJCAYAAAA/33wPAAAAvklEQVQoFY2QMQqEMBBFv7ERa/EMXkGw11K8QbDXzuN4BHv7QO6ifUgj7v4UAdlVM8Uwf+b9YZJISnlqrfEUZVlinucnBGKaJgghbiHOyLyFKIoCbdvecpyReYvo/Ma2bajrGtbaC58kCdZ1RZ7nl/4/4d5EsO/7nzl7IUtodBexMMagaRrs+06JLMvcNWmaOv2W/C/TMAyD58dxROgSmvxFFMdxoOs6lliWBXEcuzokXRbRoJRyvqqqQvye+QDMDz1D6yuj9wAAAABJRU5ErkJggg==) right center no-repeat;
     line-height: 1;
   }
-  
 
+  @media (min-width: 425px) {
+    body {
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 36px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    body {
+      font-size: 16px;
+    }
+
+    h1 {
+      font-size: 42px;
+    }
+  }

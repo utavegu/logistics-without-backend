@@ -1,6 +1,16 @@
 .filters {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  display: block;
+}
+
+.filters select {
+  width: 100%;
+}
+
+ @media (min-width: 768px) {
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
 }
 
