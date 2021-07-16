@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import s from './Forms.module.css';
 
 /*
 ISSUES:
@@ -43,7 +44,7 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={s.claim_form} onSubmit={handleSubmit}>
 
       <p>
         <label>Название фирмы клиента</label>
@@ -99,7 +100,7 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
         />
       </p>
 
-      <button type="submit">Создать заявку</button>
+      <button className="button" type="submit">Создать заявку</button>
 
     </form>
   )

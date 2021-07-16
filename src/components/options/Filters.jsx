@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import s from './Filters.module.css';
 
 
 const Filters = ({claims, onGetFilters: handleGetFilters}) => {
@@ -52,7 +53,7 @@ const Filters = ({claims, onGetFilters: handleGetFilters}) => {
 
   
   return (
-    <form>
+    <form className={s.filters}>
       <select name="date" value={filters.date} onChange={handleInputChange}>
         <option value="all">Все даты</option>
         {dates.map(date => <option key={date} value={date}>{date}</option>)}

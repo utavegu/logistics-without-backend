@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import s from './Forms.module.css';
 
 /*
 ISSUES
@@ -38,7 +39,7 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={s.claim_form} onSubmit={handleSubmit}>
 
       <p>
         <label>Название фирмы клиента</label>
@@ -91,8 +92,8 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
         />
       </p>
 
-      <button type="submit">Подтвердить изменения</button>
-      <button type="button" onClick={handleCancel}>Отмена</button>
+      <button className="button" type="submit">Подтвердить изменения</button>
+      <button className="button" type="button" onClick={handleCancel}>Отмена</button>
       
     </form>
   )

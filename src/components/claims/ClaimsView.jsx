@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ClaimsTable from './ClaimsTable';
 import Filters from '../options/Filters';
 import Search from '../options/Search';
+import s from './ClaimsView.module.css';
 
 
 const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteClaim}) => {
@@ -32,8 +33,8 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
 
   return (
     <>
-      <section>
-        <h3>Фильтры и поиск</h3>
+      <section className={s.options}>
+        <h3 className="visually-hidden">Фильтры и поиск</h3>
         <Filters claims={claims} onGetFilters={handleGetFilters} />
         <Search queryString={queryString} setQueryString={setQueryString} />
       </section>

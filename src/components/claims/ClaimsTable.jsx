@@ -22,14 +22,14 @@ const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
     <table className={s.claims_table}>
       <thead>
         <tr>
-          <th>Номер заявки</th>
-          <th>Дата и время получения заявки от клиента</th>
+          <th>№</th>
+          <th>Дата получения заявки</th>
           <th>Название фирмы клиента</th>
           <th>ФИО перевозчика</th>
           <th>Контактный телефон перевозчика</th>
           <th>Комментарии</th>
-          <th>ATI код сети перевозчика</th>
-          <th>Действия</th>
+          <th>ATI</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -44,8 +44,12 @@ const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
               <td>{claim.comments}</td>
               <td><a href={claim.ati}>{claim.ati}</a></td>
               <td>
-                <button onClick={() => handleSelectClaim(claim)}>Редактировать</button>
-                <button onClick={() => handleConfirmDeleteClaim(claim.appNumber)}>Удалить</button>
+                <button className="button button-edit" title="Редактировать" onClick={() => handleSelectClaim(claim)}>
+                  <span className="visually-hidden">Редактировать</span>
+                </button>
+                <button className="button button-delete"  title="Удалить" onClick={() => handleConfirmDeleteClaim(claim.appNumber)}>
+                  <span className="visually-hidden">Удалить</span>
+                </button>
               </td>
             </tr>
           ))

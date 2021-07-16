@@ -104,7 +104,7 @@ const App = () => {
 
       <section>
         <h2>Таблица заявок</h2>
-        <button onClick={() => setModalActive(true)}>Создать новую заявку</button>
+        <button className="button button-add" onClick={() => setModalActive(true)}>Создать новую заявку</button>
         {claims 
         && 
         <ClaimsView
@@ -117,7 +117,7 @@ const App = () => {
       <Modal active={modalActive} setActive={setModalActive} setEditing={setEditing}>
         {editing ? (
           <section>
-            <h2>Редактировать заявку</h2>
+            <h2 style={{color: "#0250bc", textShadow: "1px 1px 1px #000"}}>Редактировать заявку</h2>
             <EditClaimForm
               editing={editing}
               setEditing={setEditing}
@@ -128,7 +128,7 @@ const App = () => {
           </section>
         ) : (
           <section>
-            <h2>Создать новую заявку</h2>
+            <h2 style={{color: "#0250bc", textShadow: "1px 1px 1px #000"}}>Создать новую заявку</h2>
             <AddClaimForm onAdd={handleAddClaim} setModalActive={setModalActive} />
           </section>
         )}
