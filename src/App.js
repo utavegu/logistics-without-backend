@@ -6,18 +6,8 @@ import ClaimModel from './models/ClaimModel';
 import Modal from './components/Modal';
 import { Status } from './common'
 
-/*
-ISSUES
-  - Стилизация
-  - Оставшийся рефакторинг
-  - DRY! +-
-  - Секшинам классы
-  - Манкитестинг
-*/
-
 const SERVER_LINK = "http://localhost:4000/api/"
 const initialFormState = new ClaimModel(null, "", "", "", "", "", "");
-// А ещё у меня есть смутные воспоминания, что с батареей атрибутов можно как-то более лучше работать... рест-спред... но тот ли это случай. Вот если 1 раз задать объект, а потом какое-то одно свойство переопределять, тогда да... а тут вряд ли.
 
 const App = () => {
   const [claims, setClaims] = useState(null);
@@ -67,7 +57,6 @@ const App = () => {
     setCurrentClaim(new ClaimModel(claim.appNumber, claim.datetime, claim.firmName, claim.fullname, claim.phone, claim.comments, claim.ati));
   };
 
-
   const loadActualClaims = () => {
     createRequest(SERVER_LINK + "claims", "GET");
 	};
@@ -77,7 +66,6 @@ const App = () => {
   }, [])
   
   const handleAddClaim = claim => {
-    // Вот тут можно через рест-спред одно поле заменить. Подумаю об этом позже.
     const body = new ClaimModel(claim.appNumber, new Date().toLocaleString().slice(0, -3), claim.firmName, claim.fullname, claim.phone, claim.comments, claim.ati);
     createRequest(SERVER_LINK + "claim", "POST", body);
     loadActualClaims();
@@ -97,11 +85,9 @@ const App = () => {
     loadActualClaims();
   };
 
- 
   return (
     <main className="container">
       <h1>YetiCrab логистик компани инкорпорейтед</h1>
-
       <section>
         <h2 style={{textAlign: "center"}}>Таблица заявок</h2>
         <button className="button button-add" onClick={() => setModalActive(true)}>Создать новую заявку</button>
@@ -113,7 +99,6 @@ const App = () => {
           onDelete={handleDeleteClaim}
         />}
       </section>
-
       <Modal active={modalActive} setActive={setModalActive} setEditing={setEditing}>
         {editing ? (
           <section>
@@ -133,9 +118,7 @@ const App = () => {
           </section>
         )}
       </Modal>
-
       {Status(responseState.loading, responseState.error, responseState.success)}
-
     </main>
   );
 }

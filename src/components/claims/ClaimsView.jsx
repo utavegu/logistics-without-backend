@@ -5,7 +5,6 @@ import Filters from '../options/Filters';
 import Search from '../options/Search';
 import s from './ClaimsView.module.css';
 
-
 const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteClaim}) => {
 
   const [filtredClaims, setFiltredClaims] = useState(claims);
@@ -29,8 +28,6 @@ const ClaimsView = ({claims, onEdit: handleSelectClaim, onDelete: handleDeleteCl
 
   const isFoundInField = claim => field => claim[field].toLowerCase().indexOf(queryString.toLowerCase().trim()) > -1;
   const foundClaims = filtredClaims.filter(claim => isFoundInField(claim)('comments') || isFoundInField(claim)('phone') || isFoundInField(claim)('ati'));
-
-  
 
   return (
     <>

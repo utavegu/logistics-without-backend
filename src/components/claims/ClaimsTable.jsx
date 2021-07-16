@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './ClaimsTable.module.css';
 
-
 const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
 
   const handleConfirmDeleteClaim = id => {

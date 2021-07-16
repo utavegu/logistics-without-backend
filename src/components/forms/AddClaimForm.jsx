@@ -2,9 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import s from './Forms.module.css';
 
-
 const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
-
   const initialFormState = {
     appNumber: null,
     datetime: '',
@@ -33,10 +31,8 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
     setModalActive(false);
   };
 
-  
   return (
     <form className={s.claim_form} onSubmit={handleSubmit}>
-
       <p>
         <label htmlFor="firmName">Название фирмы клиента</label>
         <input
@@ -49,7 +45,6 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
           ref={firstInput}
         />
       </p>
-
       <p>
         <label htmlFor="fullname">ФИО перевозчика</label>
         <input
@@ -61,7 +56,6 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
           required
         />
       </p>
-
       <p>
         <label htmlFor="phone">Контактный телефон перевозчика</label>
         <input
@@ -74,7 +68,6 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
           required
         />
       </p>
-
       <textarea
         name="comments"
         cols="30"
@@ -83,7 +76,6 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
         placeholder="Комментарии"
         onChange={handleInputChange}
       ></textarea>
-
       <p>
         <label htmlFor="ati">ATI код сети перевозчика</label>
         <input
@@ -94,9 +86,7 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
           onChange={handleInputChange}
         />
       </p>
-
       <button className="button" type="submit">Создать заявку</button>
-
     </form>
   )
 }

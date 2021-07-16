@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import s from './Filters.module.css';
 
-
 const Filters = ({claims, onGetFilters: handleGetFilters}) => {
-
   const INITIAL_VALUE = "all";
 
   const getUniqueData = () => {
@@ -51,20 +49,16 @@ const Filters = ({claims, onGetFilters: handleGetFilters}) => {
     [claims]
   );
 
-  
-  
   return (
     <form className={s.filters}>
       <select name="date" value={filters.date} onChange={handleInputChange}>
         <option value="all">Все даты</option>
         {dates.map(date => <option key={date} value={date}>{date}</option>)}
       </select>
-
       <select name="firm" value={filters.firm} onChange={handleInputChange}>
         <option value="all">Все фирмы</option>
         {firms.map(firm => <option key={firm} value={firm}>{firm}</option>)}
       </select>
-
       <select name="carrier" value={filters.carrier} onChange={handleInputChange}>
         <option value="all">Все перевозчики</option>
         {carriers.map(carrier => <option key={carrier} value={carrier}>{carrier}</option>)}
