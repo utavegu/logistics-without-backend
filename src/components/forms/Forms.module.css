@@ -9,6 +9,10 @@
   margin-top: 5px;
 }
 
+.claim_form textarea {
+  resize: none;
+}
+
 .claim_form p  {
   text-align: left;
 }

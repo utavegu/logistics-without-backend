@@ -3,16 +3,6 @@ import PropTypes from 'prop-types';
 import s from './ClaimsTable.module.css';
 
 
-/*
-ISSUES:
-  1) Поля даты-времени, телефона и тд - настроить нормально (с интерактивой, атрибутами...)
-  2) АТИ - в заготовленный энчор просто вставлять код через интерполяцию в шаблонной строке. Всю ссылку, возможно, отображать нет смысла из-за её единообразия и соображений экономии места в таблице
-  3) Кнопки сделать иконками. Подписанными через вижуалли-хидден и тайтл
-  4) Стилизация
-*/
-
-
-
 const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
 
   const handleConfirmDeleteClaim = id => {
@@ -39,17 +29,23 @@ const ClaimsTable = ({claims, handleSelectClaim, handleDeleteClaim}) => {
           claims.map(claim => (
             <tr key={claim.appNumber}>
               <td>{claim.appNumber}</td>
-              <td>{claim.datetime}</td>
+              <td>
+                <time dateTime={claim.datetime}>{claim.datetime}</time>
+              </td>
               <td>{claim.firmName}</td>
               <td>{claim.fullname}</td>
-              <td>{claim.phone}</td>
-              <td>{claim.comments}</td>
-              <td><a href={claim.ati}>{claim.ati}</a></td>
+              <td>
+                <a href={`tel:+7${(claim.phone).slice(1)}`}>{claim.phone}</a>
+              </td>
+              <td className={s.comment_field}>{claim.comments}</td>
+              <td>
+                <a href={`https://ati.su/firms/${claim.ati}/info`} target="_blank" rel="noreferrer">{claim.ati}</a>
+              </td>
               <td>
                 <button className="button button-edit" title="Редактировать" onClick={() => handleSelectClaim(claim)}>
                   <span className="visually-hidden">Редактировать</span>
                 </button>
-                <button className="button button-delete"  title="Удалить" onClick={() => handleConfirmDeleteClaim(claim.appNumber)}>
+                <button className="button button-delete" title="Удалить" onClick={() => handleConfirmDeleteClaim(claim.appNumber)}>
                   <span className="visually-hidden">Удалить</span>
                 </button>
               </td>

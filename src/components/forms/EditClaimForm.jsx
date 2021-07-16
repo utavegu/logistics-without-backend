@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import s from './Forms.module.css';
 
-/*
-ISSUES
-  1) То же самое, что и в форме добавления заявки
-*/
 
 const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdateClaim, setModalActive}) => {
 
@@ -42,9 +38,10 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
     <form className={s.claim_form} onSubmit={handleSubmit}>
 
       <p>
-        <label>Название фирмы клиента</label>
+        <label htmlFor="firmName">Название фирмы клиента</label>
         <input
           type="text"
+          id="firmName"
           name="firmName"
           value={targetClaim.firmName}
           onChange={handleInputChange}
@@ -53,9 +50,10 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
       </p>
 
       <p>
-        <label>ФИО перевозчика</label>
+        <label htmlFor="fullname">ФИО перевозчика</label>
         <input
           type="text"
+          id="fullname"
           name="fullname"
           value={targetClaim.fullname}
           onChange={handleInputChange}
@@ -63,9 +61,10 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
       </p>
 
       <p>
-        <label>Контактный телефон перевозчика</label>
+        <label htmlFor="phone">Контактный телефон перевозчика</label>
         <input
           type="tel"
+          id="phone"
           name="phone"
           value={targetClaim.phone}
           onChange={handleInputChange}
@@ -83,9 +82,10 @@ const EditClaimForm = ({editing, setEditing, currentClaim, onUpdate: handleUpdat
       ></textarea>
 
       <p>
-        <label>ATI код сети перевозчика</label>
+        <label htmlFor="ati">ATI код сети перевозчика</label>
         <input
           type="text"
+          id="ati"
           name="ati"
           value={targetClaim.ati}
           onChange={handleInputChange}

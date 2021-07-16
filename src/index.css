@@ -42,6 +42,15 @@ img {
   margin: 0 auto;
 }
 
+h1 {
+  text-align: right;
+  border-bottom: 5px solid #0250bc;
+  font-size: 42px;
+  color: transparent;
+  background-clip: text;
+	background-image: linear-gradient(to right, #68c7d5, #68c7d5, #f6373e);
+}
+
 
 .button {
   display: inline-block;

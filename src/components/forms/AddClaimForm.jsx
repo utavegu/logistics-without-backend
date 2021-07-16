@@ -2,15 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import s from './Forms.module.css';
 
-/*
-ISSUES:
-  1) Перепроверить типы данных в инишиал стейт (по итогу)
-  2) Паттерн для телефона (пока не надо, мешает отладке)
-  3) Зафиксировать текстарею и проставить ей разные параметры для разных ширин
-  4) АТИ - скорее всего текст, а не урл. Потом просто вставлять его в заготовленный энчор
-  5) Связать лэйблы и инпуты
-  6) Стилизация
-*/
 
 const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
 
@@ -43,14 +34,14 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
   };
 
   
-
   return (
     <form className={s.claim_form} onSubmit={handleSubmit}>
 
       <p>
-        <label>Название фирмы клиента</label>
+        <label htmlFor="firmName">Название фирмы клиента</label>
         <input
           type="text"
+          id="firmName"
           name="firmName"
           value={claimData.firmName}
           onChange={handleInputChange}
@@ -60,9 +51,10 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
       </p>
 
       <p>
-        <label>ФИО перевозчика</label>
+        <label htmlFor="fullname">ФИО перевозчика</label>
         <input
           type="text"
+          id="fullname"
           name="fullname"
           value={claimData.fullname}
           onChange={handleInputChange}
@@ -71,19 +63,20 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
       </p>
 
       <p>
-        <label>Контактный телефон перевозчика</label>
+        <label htmlFor="phone">Контактный телефон перевозчика</label>
         <input
           type="tel"
+          id="phone"
           name="phone"
           value={claimData.phone}
           onChange={handleInputChange}
+          pattern="^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$"
           required
         />
       </p>
 
       <textarea
         name="comments"
-        id=""
         cols="30"
         rows="10"
         value={claimData.comments}
@@ -92,9 +85,10 @@ const AddClaimForm = ({onAdd: handleAddClaim, setModalActive}) => {
       ></textarea>
 
       <p>
-        <label>ATI код сети перевозчика</label>
+        <label htmlFor="ati">ATI код сети перевозчика</label>
         <input
           type="text"
+          id="ati"
           name="ati"
           value={claimData.ati}
           onChange={handleInputChange}

@@ -100,7 +100,7 @@ const App = () => {
  
   return (
     <main className="container">
-      <h1 className="visually-hidden">Система ведения заявок для логистов в автогрузоперевозках</h1>
+      <h1>YetiCrab логистик компани инкорпорейтед</h1>
 
       <section>
         <h2 style={{textAlign: "center"}}>Таблица заявок</h2>
